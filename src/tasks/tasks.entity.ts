@@ -1,14 +1,12 @@
-import { UUID } from 'crypto';
-
 export class TasksEntity {
-  id: UUID;
+  id: string;
   name: string;
   description: string;
   status: boolean;
   dateCreation: Date;
 
   constructor(
-    id: UUID,
+    id: string,
     name: string,
     description: string,
     status: boolean,
