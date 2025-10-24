@@ -9,7 +9,7 @@ Um projeto simples de **To-Do List** construído com **NestJS**, demonstrando co
 * [NestJS](https://nestjs.com/) - Framework Node.js para construir aplicações escaláveis.
 * [TypeScript](https://www.typescriptlang.org/) - Superset do JavaScript com tipagem estática.
 * Node.js
-* NPM ou Yarn
+* NPM ou PNPM
 
 ---
 
