@@ -14,6 +14,7 @@ import {
 import { TasksService } from './tasks.service';
 import { TasksRequest } from './dtos/tasks.request';
 import { TasksEntity } from './tasks.entity';
+import { Update } from './dtos/tasks.requestUpdate';
 @Controller()
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
@@ -49,10 +50,7 @@ export class TasksController {
   //Route Modify
   @HttpCode(HttpStatus.ACCEPTED)
   @Patch(':name')
-  public modifyByName(
-    @Param('name') name: string,
-    @Body() description: string,
-  ) {
-    return this.tasksService.modifyDescription(name, description);
+  public modifyByName(@Param('name') name: string, @Body() updater: Update) {
+    return this.tasksService.modifyDescription(name, updater.description);
   }
 }
