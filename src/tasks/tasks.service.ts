@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { TasksEntity } from './tasks.entity';
 import { TasksRequest } from './dtos/tasks.request';
 import { v4 as uuidv4 } from 'uuid';
@@ -26,12 +31,11 @@ export class TasksService {
       (task) => task.name === name,
     );
 
-    //Explicação para mim :
-    //Coloquei o if com a condicional de undefined pois o .find
-    //Se não achar nenhum objeto com o comparador passado
-    //Retorna undefined
     if (nameFound === undefined) {
-      throw new NotFoundException(`Task with name "${name}" not found`);
+      throw new HttpException(
+        `Task with name "${name}" not found`,
+        HttpStatus.NOT_FOUND,
+      );
     }
 
     return nameFound;
@@ -40,7 +44,7 @@ export class TasksService {
   public listAll(quantity?: number): TasksEntity[] {
     const arrayTask = Array.from(this.tasks.values());
 
-    if (this.tasks.size === 0) {
+    if (this.tasks.size < 0) {
       throw new NotFoundException('Error, there is no registered task not');
     }
 
@@ -58,7 +62,10 @@ export class TasksService {
     );
 
     if (!nameFound) {
-      throw new NotFoundException(`Task with name "${name}" not found`);
+      throw new HttpException(
+        `Task with name "${name}" not found`,
+        HttpStatus.NOT_FOUND,
+      );
     }
 
     const [id] = nameFound;
@@ -73,7 +80,10 @@ export class TasksService {
     );
 
     if (searchArray === undefined) {
-      throw new NotFoundException(`Task with name "${name}" not found`);
+      throw new HttpException(
+        `Task with name "${name}" not found`,
+        HttpStatus.NOT_FOUND,
+      );
     }
 
     searchArray.description = description;
