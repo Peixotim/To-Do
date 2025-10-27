@@ -27,4 +27,18 @@ export class TasksService {
     }
     return Array.from(this.tasks.values());
   }
+
+  public delete(name: string): boolean {
+    const nameFound = Array.from(this.tasks.entries()).find(
+      ([, task]) => task.name === name,
+    );
+
+    if (!nameFound) {
+      throw new NotFoundException(`Task with name "${name}" not found`);
+    }
+
+    const [id] = nameFound;
+    this.tasks.delete(id);
+    return true;
+  }
 }
