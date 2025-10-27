@@ -7,6 +7,7 @@ import {
   HttpStatus,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Query,
 } from '@nestjs/common';
@@ -43,5 +44,15 @@ export class TasksController {
   @Delete(':name')
   public delete(@Param('name') name: string): boolean {
     return this.tasksService.delete(name);
+  }
+
+  //Route Modify
+  @HttpCode(HttpStatus.ACCEPTED)
+  @Patch(':name')
+  public modifyByName(
+    @Param('name') name: string,
+    @Body() description: string,
+  ) {
+    return this.tasksService.modifyDescription(name, description);
   }
 }
