@@ -21,10 +21,27 @@ export class TasksService {
     return newUser;
   }
 
+  public findByName(name: string): TasksEntity {
+    const nameFound = Array.from(this.tasks.values()).find(
+      (task) => task.name === name,
+    );
+
+    //Explicação para mim :
+    //Coloquei o if com a condicional de undefined pois o .find
+    //Se não achar nenhum objeto com o comparador passado
+    //Retorna undefined
+    if (nameFound === undefined) {
+      throw new NotFoundException(`Task with name "${name}" not found`);
+    }
+
+    return nameFound;
+  }
+
   public listAll(): TasksEntity[] {
     if (this.tasks.size === null) {
       throw new NotFoundException('Error, there is no registered task not');
     }
+
     return Array.from(this.tasks.values());
   }
 
