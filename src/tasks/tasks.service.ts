@@ -65,4 +65,18 @@ export class TasksService {
     this.tasks.delete(id);
     return true;
   }
+
+  public modifyDescription(name: string, description: string): TasksEntity {
+    const arrayTasks = this.tasks.values();
+    const searchArray = Array.from(arrayTasks).find(
+      (task) => task.name === name,
+    );
+
+    if (searchArray === undefined) {
+      throw new NotFoundException(`Task with name "${name}" not found`);
+    }
+
+    searchArray.description = description;
+    return searchArray;
+  }
 }
