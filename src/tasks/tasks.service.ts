@@ -53,7 +53,7 @@ export class TasksService {
       return arrayTask.slice(0, quantity);
     }
 
-    return Array.from(this.tasks.values());
+    return arrayTask;
   }
 
   public delete(name: string): boolean {
