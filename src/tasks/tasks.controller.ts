@@ -6,7 +6,9 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseIntPipe,
   Post,
+  Query,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { TasksRequest } from './dtos/tasks.request';
@@ -25,8 +27,8 @@ export class TasksController {
   //Route ListAll
   @HttpCode(HttpStatus.OK)
   @Get()
-  public listAll(): TasksEntity[] {
-    return this.tasksService.listAll();
+  public listAll(@Query('take', ParseIntPipe) take?: number): TasksEntity[] {
+    return this.tasksService.listAll(take);
   }
 
   //Route findByName
