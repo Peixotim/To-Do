@@ -37,9 +37,16 @@ export class TasksService {
     return nameFound;
   }
 
-  public listAll(): TasksEntity[] {
-    if (this.tasks.size === null) {
+  public listAll(quantity?: number): TasksEntity[] {
+    const arrayTask = Array.from(this.tasks.values());
+
+    if (this.tasks.size === 0) {
       throw new NotFoundException('Error, there is no registered task not');
+    }
+
+    //Retorna uma quantidade especifica de tasks
+    if (quantity) {
+      return arrayTask.slice(0, quantity);
     }
 
     return Array.from(this.tasks.values());
