@@ -1,25 +1,31 @@
-import { IsNotEmpty, IsBoolean, IsDate, IsString } from 'class-validator';
+import { IsNotEmpty, IsDate, IsString, IsOptional } from 'class-validator';
 export class TasksRequest {
   @IsString()
   @IsNotEmpty()
+  @IsOptional()
   id: string;
+
   @IsString()
   @IsNotEmpty()
   name: string;
+
   @IsString()
   @IsNotEmpty()
   description: string;
-  @IsBoolean()
-  status: boolean;
+
+  @IsString()
+  status: string;
+
   @IsDate()
-  dateCreation: Date;
+  @IsOptional()
+  dateCreation: string;
 
   constructor(
     id: string,
     name: string,
     description: string,
-    status: boolean,
-    dateCreation: Date,
+    status: string,
+    dateCreation: string,
   ) {
     this.id = id;
     this.name = name;

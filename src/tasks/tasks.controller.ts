@@ -6,7 +6,6 @@ import {
   HttpCode,
   HttpStatus,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -15,7 +14,9 @@ import { TasksService } from './tasks.service';
 import { TasksRequest } from './dtos/tasks.request';
 import { TasksEntity } from './tasks.entity';
 import { Update } from './dtos/tasks.requestUpdate';
-@Controller()
+import { ListTasksQueryDto } from './dtos/tasks.query';
+
+@Controller('tasks')
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
@@ -29,8 +30,8 @@ export class TasksController {
   //Route ListAll
   @HttpCode(HttpStatus.OK)
   @Get()
-  public listAll(@Query('take', ParseIntPipe) take?: number): TasksEntity[] {
-    return this.tasksService.listAll(take);
+  public listAll(@Query() take?: ListTasksQueryDto): TasksEntity[] {
+    return this.tasksService.listAll(take?.take);
   }
 
   //Route findByName

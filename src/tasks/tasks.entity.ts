@@ -2,14 +2,14 @@ export class TasksEntity {
   id: string;
   name: string;
   description: string;
-  status: boolean;
+  status: string;
   dateCreation: Date;
 
   constructor(
     id: string,
     name: string,
     description: string,
-    status: boolean,
+    status: string,
     dateCreation: Date,
   ) {
     this.id = id;

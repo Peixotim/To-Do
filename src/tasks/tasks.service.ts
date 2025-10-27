@@ -1,12 +1,8 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { TasksEntity } from './tasks.entity';
 import { TasksRequest } from './dtos/tasks.request';
 import { v4 as uuidv4 } from 'uuid';
+
 @Injectable()
 export class TasksService {
   private tasks = new Map<string, TasksEntity>();
@@ -17,7 +13,7 @@ export class TasksService {
       id: id,
       name: request.name,
       description: request.description,
-      dateCreation: request.dateCreation,
+      dateCreation: new Date(),
       status: request.status,
     };
 
@@ -44,8 +40,8 @@ export class TasksService {
   public listAll(quantity?: number): TasksEntity[] {
     const arrayTask = Array.from(this.tasks.values());
 
-    if (this.tasks.size < 0) {
-      throw new NotFoundException('Error, there is no registered task not');
+    if (this.tasks.size === 0) {
+      throw new HttpException(`Not Found Tasks`, HttpStatus.NOT_FOUND);
     }
 
     //Retorna uma quantidade especifica de tasks
