@@ -1,9 +1,11 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
+  Param,
   Post,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
@@ -13,15 +15,31 @@ import { TasksEntity } from './tasks.entity';
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
+  //Route Create
   @HttpCode(HttpStatus.CREATED)
   @Post()
   public create(@Body() tasksRequest: TasksRequest) {
     return this.tasksService.create(tasksRequest);
   }
 
+  //Route ListAll
   @HttpCode(HttpStatus.OK)
   @Get()
   public listAll(): TasksEntity[] {
     return this.tasksService.listAll();
+  }
+
+  //Route findByName
+  @HttpCode(HttpStatus.OK)
+  @Get(':name')
+  public findByName(@Param('name') name: string): TasksEntity {
+    return this.tasksService.findByName(name);
+  }
+
+  //Route Delete
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Delete(':name')
+  public delete(@Param('name') name: string): boolean {
+    return this.tasksService.delete(name);
   }
 }
