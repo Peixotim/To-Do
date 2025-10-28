@@ -2,9 +2,22 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TasksModule } from 'src/tasks/tasks.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports: [TasksModule],
+  imports: [
+    TypeOrmModule.forRoot({
+      username: 'ad',
+      password: 'ad',
+      database: 'db',
+      port: 5432,
+      type: 'postgres',
+      host: 'localhost',
+      autoLoadEntities: true,
+      synchronize: true,
+    }),
+    TasksModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -30,28 +30,31 @@ export class TasksController {
   //Route ListAll
   @HttpCode(HttpStatus.OK)
   @Get()
-  public listAll(@Query() take?: ListTasksQueryDto): TasksEntity[] {
+  public listAll(@Query() take?: ListTasksQueryDto): Promise<TasksEntity[]> {
     return this.tasksService.listAll(take?.take);
   }
 
   //Route findByName
   @HttpCode(HttpStatus.OK)
   @Get(':name')
-  public findByName(@Param('name') name: string): TasksEntity {
+  public findByName(@Param('name') name: string): Promise<TasksEntity> {
     return this.tasksService.findByName(name);
   }
 
   //Route Delete
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':name')
-  public delete(@Param('name') name: string): boolean {
+  public delete(@Param('name') name: string): Promise<TasksEntity> {
     return this.tasksService.delete(name);
   }
 
   //Route Modify
   @HttpCode(HttpStatus.ACCEPTED)
   @Patch(':name')
-  public modifyByName(@Param('name') name: string, @Body() updater: Update) {
+  public modifyDescription(
+    @Param('name') name: string,
+    @Body() updater: Update,
+  ): Promise<TasksEntity> {
     return this.tasksService.modifyDescription(name, updater.description);
   }
 }

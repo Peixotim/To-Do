@@ -2,14 +2,19 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { TasksEntity } from './tasks.entity';
 import { TasksRequest } from './dtos/tasks.request';
 import { v4 as uuidv4 } from 'uuid';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class TasksService {
-  private tasks = new Map<string, TasksEntity>();
+  constructor(
+    @InjectRepository(TasksEntity)
+    private readonly tasksRepository: Repository<TasksEntity>,
+  ) {}
 
-  public create(request: TasksRequest): TasksEntity {
+  public async create(request: TasksRequest): Promise<TasksEntity> {
     const id = uuidv4();
-    const newUser: TasksEntity = {
+    const newTask: TasksEntity = {
       id: id,
       name: request.name,
       description: request.description,
@@ -17,17 +22,15 @@ export class TasksService {
       status: request.status,
     };
 
-    this.tasks.set(id, newUser);
+    await this.tasksRepository.save(newTask);
 
-    return newUser;
+    return newTask;
   }
 
-  public findByName(name: string): TasksEntity {
-    const nameFound = Array.from(this.tasks.values()).find(
-      (task) => task.name === name,
-    );
+  public async findByName(name: string): Promise<TasksEntity> {
+    const nameFound = await this.tasksRepository.findOneBy({ name });
 
-    if (nameFound === undefined) {
+    if (nameFound === null) {
       throw new HttpException(
         `Task with name "${name}" not found`,
         HttpStatus.NOT_FOUND,
@@ -37,52 +40,52 @@ export class TasksService {
     return nameFound;
   }
 
-  public listAll(quantity?: number): TasksEntity[] {
-    const arrayTask = Array.from(this.tasks.values());
+  public async listAll(quantity?: number): Promise<TasksEntity[]> {
+    const arrayTasks = await this.tasksRepository.find();
 
-    if (this.tasks.size === 0) {
+    if (arrayTasks.length === 0) {
       throw new HttpException(`Not Found Tasks`, HttpStatus.NOT_FOUND);
     }
 
     //Retorna uma quantidade especifica de tasks
     if (quantity) {
-      return arrayTask.slice(0, quantity);
+      return this.tasksRepository.find({ take: quantity });
     }
 
-    return arrayTask;
+    return arrayTasks;
   }
 
-  public delete(name: string): boolean {
-    const nameFound = Array.from(this.tasks.entries()).find(
-      ([, task]) => task.name === name,
-    );
+  public async delete(name: string): Promise<TasksEntity> {
+    const nameFound = await this.tasksRepository.findOne({
+      where: { name },
+    });
 
-    if (!nameFound) {
+    if (nameFound === null) {
       throw new HttpException(
         `Task with name "${name}" not found`,
         HttpStatus.NOT_FOUND,
       );
     }
+    await this.tasksRepository.delete(nameFound.id);
 
-    const [id] = nameFound;
-    this.tasks.delete(id);
-    return true;
+    return nameFound;
   }
 
-  public modifyDescription(name: string, description: string): TasksEntity {
-    const arrayTasks = this.tasks.values();
-    const searchArray = Array.from(arrayTasks).find(
-      (task) => task.name === name,
-    );
+  public async modifyDescription(
+    name: string,
+    description: string,
+  ): Promise<TasksEntity> {
+    const searchEntity = await this.tasksRepository.findOneBy({ name });
 
-    if (searchArray === undefined) {
+    if (searchEntity === null) {
       throw new HttpException(
         `Task with name "${name}" not found`,
         HttpStatus.NOT_FOUND,
       );
     }
+    searchEntity.description = description;
+    const saved = await this.tasksRepository.save(searchEntity);
 
-    searchArray.description = description;
-    return searchArray;
+    return saved;
   }
 }
