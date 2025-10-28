@@ -40,6 +40,19 @@ export class TasksService {
     return nameFound;
   }
 
+  public async findById(id: string): Promise<TasksEntity> {
+    const findById = await this.tasksRepository.findOneBy({ id });
+
+    if (findById === null) {
+      throw new HttpException(
+        `Not Found Tasks With This ID ${id}`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return findById;
+  }
+
   public async listAll(quantity?: number): Promise<TasksEntity[]> {
     const arrayTasks = await this.tasksRepository.find();
 
@@ -71,6 +84,7 @@ export class TasksService {
     return nameFound;
   }
 
+  //Function Async what Modify Description
   public async modifyDescription(
     name: string,
     description: string,

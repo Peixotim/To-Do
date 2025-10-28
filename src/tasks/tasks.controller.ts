@@ -57,4 +57,10 @@ export class TasksController {
   ): Promise<TasksEntity> {
     return this.tasksService.modifyDescription(name, updater.description);
   }
+
+  @Get(':id')
+  @HttpCode(HttpStatus.OK)
+  public findById(@Param('id') id: string): Promise<TasksEntity> {
+    return this.tasksService.findById(id);
+  }
 }
